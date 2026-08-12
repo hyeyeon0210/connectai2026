@@ -44,6 +44,7 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+    console.log("DIRECTLINE RESPONSE");
     console.log(JSON.stringify(data, null, 2));
 
     const botMessages = data.activities.filter(activity =>
