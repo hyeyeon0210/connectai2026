@@ -282,7 +282,36 @@ const student = document.getElementById('student');
 const teacher = document.getElementById('teacher');
 const chat = document.getElementById('chat');
 const txt = document.getElementById('txt');
+let token = '';
+let conversationId = '';
 
+async function initializeChat() {
+
+    try {
+
+        const response =
+            await fetch('/api/student-token');
+
+        const data =
+            await response.json();
+
+        token = data.token;
+        conversationId = data.conversationId;
+
+        console.log('Copilot Studio 연결 성공');
+
+    } catch (error) {
+
+        console.error(error);
+
+        chat.innerHTML += `
+            <div class="msg">
+                AI 멘토 연결 실패
+            </div>
+        `;
+    }
+}
+        
 function mode(m){
 
     student.classList.toggle('hidden', m !== 'student');
@@ -315,30 +344,72 @@ function mode(m){
         `;
 }
 
-function send(){
+async function send() {
 
     const v = txt.value.trim();
 
-    if(!v) return;
+    if (!v) return;
 
     const userMsg = document.createElement('div');
+
     userMsg.className = 'msg user';
+
     userMsg.textContent = v;
 
-    const aiMsg = document.createElement('div');
-    aiMsg.className = 'msg';
-    aiMsg.textContent =
-        'AI 멘토: 해당 주제를 데이터로 탐구하려면 어떤 데이터를 수집할 수 있을까요?';
-
     chat.appendChild(userMsg);
-    chat.appendChild(aiMsg);
-
-    chat.scrollTop = chat.scrollHeight;
 
     txt.value = '';
+
+    try {
+
+        const response =
+            await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    token,
+                    conversationId,
+                    text: v
+                })
+            });
+
+        const data =
+            await response.json();
+
+        const aiMsg =
+            document.createElement('div');
+
+        aiMsg.className = 'msg';
+
+        aiMsg.textContent =
+            'AI 멘토: ' + data.reply;
+
+        chat.appendChild(aiMsg);
+
+        chat.scrollTop =
+            chat.scrollHeight;
+
+    } catch (error) {
+
+        console.error(error);
+
+        const aiMsg =
+            document.createElement('div');
+
+        aiMsg.className = 'msg';
+
+        aiMsg.textContent =
+            'AI 멘토 연결 오류';
+
+        chat.appendChild(aiMsg);
+
+    }
 }
 
 mode('student');
+initializeChat();
     </script>
 
 </body>
