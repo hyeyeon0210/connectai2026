@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>AI EDA Project Platform v2</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Segoe UI,sans-serif;
+            background: #f4f7fb;
+        }
+
+        header {
+            background: #123b66;
+            color: #fff;
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 240px 1fr 320px;
+            height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            background: #1f2937;
+            color: #fff;
+            padding: 12px;
+        }
+
+            .sidebar div {
+                padding: 10px;
+                border-radius: 8px;
+                margin: 4px 0;
+            }
+
+                .sidebar div:hover {
+                    background: #374151;
+                }
+
+        .main {
+            padding: 16px;
+            overflow: auto;
+        }
+
+        .right {
+            background: #fff;
+            border-left: 1px solid #ddd;
+            padding: 16px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.1);
+        }
+
+        .progress {
+            height: 20px;
+            background: #ddd;
+            border-radius: 30px;
+        }
+
+        .bar {
+            height: 20px;
+            width: 43%;
+            background: #22c55e;
+            border-radius: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+            gap: 10px;
+        }
+
+        .chat {
+            height: 280px;
+            overflow: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #fafafa;
+        }
+
+        .msg {
+            margin: 8px 0;
+        }
+
+        .user {
+            text-align: right;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #2563eb;
+            color: #fff;
+        }
+
+        input {
+            padding: 10px;
+            width: 80%;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>🤖 AI EDA 프로젝트 플랫폼</div>
+        <div>
+            <button onclick="mode('student')">Student</button>
+            <button onclick="mode('teacher')">Teacher</button>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <div class="sidebar">
+            <div id="menu"></div>
+        </div>
+
+        <div class="main">
+
+            <section id="student">
+
+                <div class="card">
+                    <h3>프로젝트 진행 현황</h3>
+                    <div class="progress">
+                        <div class="bar"></div>
+                    </div>
+                    <p>1.진로탐색 → 7.프로젝트 제안서</p>
+                </div>
+
+                <div class="card">
+                    <h3>AI EDA 프로젝트 멘토</h3>
+
+                    <div class="chat" id="chat">
+                        <div class="msg">
+                            AI 멘토: 어떤 진로와 사회 문제에 관심이 있나요?
+                        </div>
+                    </div>
+
+                    <p>
+                        <input id="txt">
+                        <button onclick="send()">전송</button>
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>현재 탐구 결과(임시 정리용)</h3>
+
+                    <div class="grid">
+                        <div class="card">희망 진로</div>
+                        <div class="card">탐구 주제</div>
+                        <div class="card">탐구 질문</div>
+                        <div class="card">데이터</div>
+                        <div class="card">핵심속성</div>
+                        <div class="card">EDA계획</div>
+                        <div class="card">AI 활용판단</div>
+                    </div>
+
+                    <p>
+                        <b>※ 프로젝트 저장 기능 없음. 학생은 최종 제안서를 별도 파일로 제출.</b>
+                    </p>
+                </div>
+
+            </section>
+
+            <section id="teacher" class="hidden">
+
+                <div class="card">
+                    <h2>교사용 Workspace</h2>
+                    <p>학생 제출 파일 수합 후 업로드 → AI 분석 → Excel 요약 생성</p>
+                </div>
+
+                <div class="card">
+                    <h3>학생 산출물 업로드</h3>
+                    <input type="file" multiple>
+                    <p>지원 예시: pdf, docx, txt</p>
+                </div>
+
+                <div class="card">
+                    <h3>Excel 요약 생성</h3>
+
+                    <textarea>
+학생명 | 진로 | 주제 | 탐구질문 | 성취기준 | 피드백
+                </textarea>
+
+                    <br>
+
+                    <button onclick="alert('실제 서비스에서는 Copilot Studio + 서버 API가 Excel(xlsx) 생성')">
+                        Excel 생성
+                    </button>
+
+                </div>
+
+                <div class="card">
+                    <h3>교사용 AI 분석 흐름</h3>
+
+                    <ol>
+                        <li>학생 산출물 분석가</li>
+                        <li>대화 로그 분석가</li>
+                        <li>성취기준 평가 전문가</li>
+                        <li>피드백 생성 코치</li>
+                        <li>Excel 요약 생성 전문가</li>
+                    </ol>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <div class="right">
+
+            <h3>활성 에이전트</h3>
+            <div id="agents"></div>
+
+            <div class="card">
+                <h4>처리 상태</h4>
+                <p>업로드 대기</p>
+            </div>
+
+            <div class="card">
+                <h4>사용 Skill</h4>
+                <p>Student Artifact Analysis Skill</p>
+            </div>
+
+            <div class="card">
+                <h4>다음 작업</h4>
+                <p>Excel 요약 생성</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+const sm = [
+    'Dashboard',
+    '진로 탐색',
+    '문제 정의',
+    '데이터 탐색',
+    '핵심 속성 선정',
+    'EDA 설계',
+    'AI 활용 판단',
+    '프로젝트 제안서'
+];
+
+const tm = [
+    'Dashboard',
+    '학생 관리',
+    '산출물 분석',
+    '성취기준 분석',
+    '피드백 관리',
+    'Excel 요약'
+];
+
+const menu = document.getElementById('menu');
+const agents = document.getElementById('agents');
+const student = document.getElementById('student');
+const teacher = document.getElementById('teacher');
+const chat = document.getElementById('chat');
+const txt = document.getElementById('txt');
+
+function mode(m){
+
+    student.classList.toggle('hidden', m !== 'student');
+    teacher.classList.toggle('hidden', m !== 'teacher');
+
+    menu.innerHTML = (m === 'student' ? sm : tm)
+        .map(x => `<div>${x}</div>`)
+        .join('');
+
+    agents.innerHTML =
+        m === 'student'
+        ? `
+        <b>AI EDA 프로젝트 멘토</b>
+        <ul>
+            <li>진로 탐색 전문가</li>
+            <li>문제 정의 코치</li>
+            <li>데이터 탐색 전문가</li>
+            <li>EDA 설계 전문가</li>
+            <li>제안서 작성 코치</li>
+        </ul>
+        `
+        : `
+        <b>AI EDA 프로젝트 관리 도우미</b>
+        <ul>
+            <li>학생 산출물 분석가</li>
+            <li>성취기준 평가 전문가</li>
+            <li>피드백 생성 코치</li>
+            <li>Excel 요약 생성 전문가</li>
+        </ul>
+        `;
+}
+
+function send(){
+
+    const v = txt.value.trim();
+
+    if(!v) return;
+
+    const userMsg = document.createElement('div');
+    userMsg.className = 'msg user';
+    userMsg.textContent = v;
+
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg';
+    aiMsg.textContent =
+        'AI 멘토: 해당 주제를 데이터로 탐구하려면 어떤 데이터를 수집할 수 있을까요?';
+
+    chat.appendChild(userMsg);
+    chat.appendChild(aiMsg);
+
+    chat.scrollTop = chat.scrollHeight;
+
+    txt.value = '';
+}
+
+mode('student');
+    </script>
+
+</body>
+</html>
