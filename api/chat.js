@@ -22,9 +22,44 @@ module.exports = async function handler(req, res) {
       })
     });
 
-    await new Promise(resolve =>
-      setTimeout(resolve, 15000)
-    );
+    let lastReply = null;
+
+for (let i = 0; i < 10; i++) {
+
+  await new Promise(resolve =>
+    setTimeout(resolve, 1000)
+  );
+
+  const response = await fetch(activityUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const data = await response.json();
+
+  const activities = data.activities || [];
+
+  const botMessages = activities.filter(activity =>
+    activity.type === "message" &&
+    activity.from &&
+    activity.from.id !== "student"
+  );
+
+  if (botMessages.length > 0) {
+
+    lastReply =
+      botMessages[botMessages.length - 1].text;
+
+    break;
+  }
+}
+
+return res.status(200).json({
+  reply: lastReply || "응답을 받지 못했습니다."
+});
+``
 
     const response = await fetch(activityUrl, {
       method: "GET",
