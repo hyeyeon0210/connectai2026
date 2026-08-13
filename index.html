@@ -103,4 +103,185 @@ button{
 <body>
 
 <header>
-    <div>�
+    <div>🤖 AI EDA 프로젝트 플랫폼</div>
+
+    <div>
+        <button onclick="mode('student')">Student</button>
+        <button onclick="mode('teacher')">Teacher</button>
+    </div>
+</header>
+
+<div class="layout">
+
+    <div class="sidebar">
+        <div id="menu"></div>
+    </div>
+
+    <div class="main">
+
+        <!-- Student -->
+
+        <section id="student">
+
+            <div class="card">
+                <h3>프로젝트 진행 현황</h3>
+
+                <div class="progress">
+                    <div class="bar"></div>
+                </div>
+
+                <p>1. 진로 탐색 → 7. 프로젝트 제안서</p>
+            </div>
+
+            <div class="card">
+                <h3>AI EDA 프로젝트 멘토</h3>
+
+                <iframe
+                    src="https://copilotstudio.microsoft.com/environments/9324e73a-cd4e-e049-b7ba-177af6165e9c/bots/crbf2_aiedaprojectmento_I_uQdt/webchat?__version__=2&enableFileAttachment=false&cliAgent=true">
+                </iframe>
+
+            </div>
+
+        </section>
+
+        <!-- Teacher -->
+
+        <section id="teacher" class="hidden">
+
+            <div class="card">
+                <h2>교사용 Workspace</h2>
+
+                <p>
+                    학생 제출물 분석,
+                    성취기준 평가,
+                    피드백 생성,
+                    Excel 요약 생성
+                </p>
+            </div>
+
+            <div class="card">
+
+                <h3>AI EDA 프로젝트 관리 도우미</h3>
+
+                https://copilotstudio.microsoft.com/environments/9324e73a-cd4e-e049-b7ba-177af6165e9c/bots/crbf2_aieda_jwzmOb/webchat?__version__=2&enableFileAttachment=false&cliAgent=true">
+                </iframe>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <div class="right">
+
+        <h3>활성 에이전트</h3>
+
+        <div id="agents"></div>
+
+        <div class="card">
+            <h4>현재 상태</h4>
+            <p id="statusText">학생 모드</p>
+        </div>
+
+        <div class="card">
+            <h4>활용 목적</h4>
+
+            <ul>
+                <li>진로 탐색</li>
+                <li>탐구 주제 발굴</li>
+                <li>EDA 설계</li>
+                <li>프로젝트 제안서 작성</li>
+                <li>학생 결과 분석</li>
+                <li>Excel 요약 생성</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const studentMenu = [
+    'Dashboard',
+    '진로 탐색',
+    '문제 정의',
+    '데이터 탐색',
+    '핵심 속성 선정',
+    'EDA 설계',
+    'AI 활용 판단',
+    '프로젝트 제안서'
+];
+
+const teacherMenu = [
+    'Dashboard',
+    '학생 관리',
+    '산출물 분석',
+    '성취기준 분석',
+    '피드백 생성',
+    'Excel 요약'
+];
+
+function mode(type){
+
+    document
+        .getElementById('student')
+        .classList
+        .toggle('hidden', type !== 'student');
+
+    document
+        .getElementById('teacher')
+        .classList
+        .toggle('hidden', type !== 'teacher');
+
+    if(type === 'student'){
+
+        menu.innerHTML =
+            studentMenu
+            .map(x => `<div>${x}</div>`)
+            .join('');
+
+        agents.innerHTML = `
+            <b>AI EDA 프로젝트 멘토</b>
+            <ul>
+                <li>진로 탐색 전문가</li>
+                <li>문제 정의 코치</li>
+                <li>데이터 탐색 전문가</li>
+                <li>EDA 설계 전문가</li>
+                <li>제안서 작성 코치</li>
+            </ul>
+        `;
+
+        statusText.textContent =
+            '학생 모드';
+
+    } else {
+
+        menu.innerHTML =
+            teacherMenu
+            .map(x => `<div>${x}</div>`)
+            .join('');
+
+        agents.innerHTML = `
+            <b>AI EDA 프로젝트 관리 도우미</b>
+            <ul>
+                <li>학생 산출물 분석가</li>
+                <li>성취기준 평가 전문가</li>
+                <li>피드백 생성 코치</li>
+                <li>Excel 요약 생성 전문가</li>
+            </ul>
+        `;
+
+        statusText.textContent =
+            '교사 모드';
+    }
+
+}
+
+mode('student');
+
+</script>
+
+</body>
+</html>
