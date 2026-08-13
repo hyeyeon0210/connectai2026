@@ -1,51 +1,32 @@
-module.exports = async function handler(req, res) {
+for (let i = 0; i < 8; i++) {
 
-  try {
+  await new Promise(resolve =>
+    setTimeout(resolve, 1000)
+  );
 
-    const { token, conversationId, text } = req.body;
-
-    if (!token || !conversationId || !text) {
-
-      return res.status(400).json({
-        error: "필수값 누락"
-      });
-
+  const response = await fetch(activityUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
     }
+  });
 
-    const activityUrl =
-      `https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`;
+  const data = await response.json();
 
-    const response = await fetch(
-      activityUrl,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          type: "message",
-          from: {
-            id: "student"
-          },
-          text: text
-        })
-      }
-    );
+  const activities = data.activities || [];
 
-    const data = await response.json();
+  const botMessages = activities.filter(activity =>
+    activity.type === "message" &&
+    activity.from &&
+    activity.from.id !== "student"
+  );
+
+  if (botMessages.length > 0) {
 
     return res.status(200).json({
-      success: true,
-      activityId: data.id
-    });
-
-  } catch (error) {
-
-    return res.status(500).json({
-      error: error.message
+      reply:
+        botMessages[botMessages.length - 1].text
     });
 
   }
-
-};
+}
