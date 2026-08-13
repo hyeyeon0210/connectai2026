@@ -24,8 +24,7 @@ export default async function handler(req, res) {
     }
   );
 
-  const conversationData =
-    await conversationResponse.json();
+  const conversationData = await conversationResponse.json();
 
   res.status(200).json({
     token: tokenData.token,
