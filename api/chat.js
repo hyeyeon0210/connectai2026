@@ -7,7 +7,6 @@ module.exports = async function handler(req, res) {
     const activityUrl =
       `https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`;
 
-    // 사용자 메시지 전송
     await fetch(activityUrl, {
       method: "POST",
       headers: {
@@ -23,12 +22,11 @@ module.exports = async function handler(req, res) {
       })
     });
 
-    // 응답 생성 대기
+    // 15초 대기
     await new Promise(resolve =>
-      setTimeout(resolve, 5000)
+      setTimeout(resolve, 15000)
     );
 
-    // 응답 조회
     const response = await fetch(activityUrl, {
       method: "GET",
       headers: {
@@ -38,12 +36,8 @@ module.exports = async function handler(req, res) {
 
     const data = await response.json();
 
-    console.log(
-      JSON.stringify(data, null, 2)
-    );
-
     return res.status(200).json({
-      reply: JSON.stringify(data)
+      reply: JSON.stringify(data, null, 2)
     });
 
   } catch (error) {
